@@ -1,18 +1,10 @@
 <?php
-// Include the database configuration
-include 'config/db.php';
+include_once './config/db.php';
 
-// If we reach here without dying, connection is successful
-if ($con) {
-    echo "Database connection successful!";
-    // Optional: Test a simple query
-    try {
-        $stmt = $con->query("SELECT 1");
-        echo " Query test passed.";
-    } catch (PDOException $e) {
-        echo " Query test failed: " . $e->getMessage();
-    }
-} else {
-    echo "Database connection failed.";
+try {
+    $con->query('SELECT 1');
+    echo "Database connection is successful.";
+} catch (PDOException $e) {
+    echo "Database connection failed: " . $e->getMessage();
 }
 ?>

@@ -48,6 +48,7 @@ const Shop = () => {
       const res = await fetch('http://localhost/Appzip/APPDEV/backend/index.php?action=add_to_cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ product_id: productId, quantity: 1 }),
       });
       const data = await res.json();
@@ -62,7 +63,7 @@ const Shop = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="select-none cursor-default max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Shop</h1>
 
       {/* Search and Filter */}

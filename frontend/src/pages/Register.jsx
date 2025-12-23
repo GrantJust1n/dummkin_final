@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import dunkinCup from '../assets/dunkin-cup.png'; // Add your cup image to this path
+import { AuthContext } from '../context/AuthContext';
+import dunkinCup from '../assets/dunkin-cup.png';
+
 
 const Register = () => {
   const [form, setForm] = useState({ username: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-
+   
+ 
+ 
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user])
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -37,7 +47,7 @@ const Register = () => {
   };
 
   return (
-     <div className="h-screen flex flex-col items-center justify-center bg-white px-6 overflow-hidden">
+     <div className="select-none cursor-default h-screen flex flex-col items-center justify-center bg-white px-6 overflow-hidden">
       <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg">
         {/* Left Side - Logo */}
         <div className="hidden md:flex flex-1 items-center justify-center bg-white p-8">

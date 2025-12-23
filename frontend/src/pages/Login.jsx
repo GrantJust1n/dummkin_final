@@ -1,13 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext.jsx";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
-  const [loading, setLoading] = useState(false);
+  const [loadingBtn, setLoadingBtn] = useState(false);
   const [error, setError] = useState(null);
-  const { login } = useContext(AuthContext);
+
+  const { user, loading, login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+
+useEffect(() => {
+  if (loading) return;
+
+  if (user) {
+    
+    if (user.role === "seller") navigate("/seller");
+    else if (user.role === "admin") navigate("/admin");
+    else navigate("/dashboard");
+  }
+}, [user, loading, navigate]); // 
+if (loading) return null;
+
+  if (loading) return null; // 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -15,45 +31,59 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingBtn(true);
     setError(null);
+
     try {
-      const res = await fetch(
-        "http://localhost/Appzip/APPDEV/backend/index.php?action=login",
+     const res = await fetch(
+            "http://localhost/Appzip/APPDEV/backend/index.php?action=login",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          credentials: "include",
+          body: new URLSearchParams({
+            username: form.username,
+            password: form.password,
+          }),
         }
       );
+
       const data = await res.json();
-      if (data.type === "success") {
+      console.log("LOGIN RESPONSE:", data);
+
+      if (data.success) {
         login(data.user);
-        navigate("/shop");
+
+if (data.user.role === "seller") navigate("/seller");
+else if (data.user.role === "admin") navigate("/admin");
+else navigate("/dashboard"); 
       } else {
-        setError(data.message || "Login failed");
+        setError(data.error || "Login failed");
       }
     } catch (err) {
       setError("Error during login");
     } finally {
-      setLoading(false);
+      setLoadingBtn(false);
     }
   };
 
+
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-white px-6 overflow-hidden">
+    <div className="select-none cursor-default h-screen flex flex-col items-center justify-center bg-white px-6 overflow-hidden">
       <div className="text-center mb-10 select-none">
         <h1 className="text-6xl font-fredoka font-extrabold " style={{
-         WebkitTextStroke: "2px white",      // white outline
-         textShadow: "0 0 8px white, 2px 2px 6px rgba(0,0,0,0.3)" // glow + depth
+         WebkitTextStroke: "2px white",      // 
+         textShadow: "0 0 8px white, 2px 2px 6px rgba(0,0,0,0.3)" //
            }}>
           <span className="text-orange-600 ">DU</span>
           <span className="text-orange-600">mKIN'</span>
         </h1>
         <h2 className="text-5xl font-extrabold text-pink-600"
          style={{
-         WebkitTextStroke: "2px white",      // white outline
-         textShadow: "0 0 8px white, 2px 2px 6px rgba(0,0,0,0.3)" // glow + depth
+         WebkitTextStroke: "2px white",      // 
+         textShadow: "0 0 8px white, 2px 2px 6px rgba(0,0,0,0.3)" //
            }}>
           DONUTS
         </h2>
